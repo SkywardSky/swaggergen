@@ -222,9 +222,7 @@ func GenerateDocs(curpath string) {
 	parsePackagesFromDir(curpath)
 	filepath.Walk(filepath.Join(curpath, "routers"), func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
-			if !strings.Contains(info.Name(), "_.go") {
-				generateDocs(curpath, info.Name())
-			}
+			generateDocs(curpath, info.Name())
 		}
 		return nil
 	})
