@@ -29,4 +29,6 @@ func main(){
         beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
     }
 }
+
+3.beego得自动化文档使用方式：https://beego.me/docs/advantage/docs.md
  ~~~
