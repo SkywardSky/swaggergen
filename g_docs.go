@@ -1026,7 +1026,12 @@ func getparams(str string) []string {
 func getModel(str string) (definitionName string, m swagger.Schema, realTypes []string) {
 	strs := strings.Split(str, ".")
 	// strs = [packageName].[objectName]
-	packageName := strs[0]
+	packageName := ""
+	if len(strs) < 3 {
+		packageName = strs[0]
+	} else {
+		packageName = strings.Join(strs[:len(strs)-1], ".")
+	}
 	objectname := strs[len(strs)-1]
 
 	// Default all swagger schemas to object, if no other type is found
