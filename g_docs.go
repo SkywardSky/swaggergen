@@ -368,10 +368,18 @@ func generateDocs(curpath, name string) {
 									} else if selname == "NSInclude" {
 										controllerName = analyseNSInclude("", pp)
 										if v, ok := controllerComments[controllerName]; ok {
-											rootapi.Tags = append(rootapi.Tags, swagger.Tag{
-												Name:        controllerName, // if the NSInclude has no prefix, we use the controllername as the tag
-												Description: v,
-											})
+											isExit := false
+											for _, v := range rootapi.Tags { //tags不存在时再添加
+												if v.Name == controllerName {
+													isExit = true
+												}
+											}
+											if !isExit {
+												rootapi.Tags = append(rootapi.Tags, swagger.Tag{
+													Name:        controllerName, // if the NSInclude has no prefix, we use the controllername as the tag
+													Description: v,
+												})
+											}
 										}
 									}
 								}
@@ -413,10 +421,23 @@ func findNS(s string, params []ast.Expr) {
 			if pp.Fun.(*ast.SelectorExpr).Sel.String() == "NSInclude" {
 				controllerName := analyseNSInclude(s, pp)
 				if v, ok := controllerComments[controllerName]; ok {
-					rootapi.Tags = append(rootapi.Tags, swagger.Tag{
-						Name:        strings.Trim(s, "/"),
-						Description: v,
-					})
+					isExit, name := false, func() string {
+						if strings.Contains(s, "/") {
+							return s[strings.LastIndex(s, "/")+1:]
+						}
+						return strings.Trim(s, "/")
+					}()
+					for _, v := range rootapi.Tags { //tags不存在时再添加
+						if v.Name == name {
+							isExit = true
+						}
+					}
+					if !isExit {
+						rootapi.Tags = append(rootapi.Tags, swagger.Tag{
+							Name:        name,
+							Description: v,
+						})
+					}
 				}
 			} else if pp.Fun.(*ast.SelectorExpr).Sel.String() == "NSNamespace" {
 				prefix, others := analyseNewNamespace(pp)
@@ -427,15 +448,23 @@ func findNS(s string, params []ast.Expr) {
 			} else if pp.Fun.(*ast.SelectorExpr).Sel.String() == "NSRouter" {
 				controllerName := analyseNSRouter(s, pp)
 				if v, ok := controllerComments[controllerName]; ok {
-					rootapi.Tags = append(rootapi.Tags, swagger.Tag{
-						Name: func() string {
-							if strings.Contains(s, "/") {
-								return s[strings.LastIndex(s, "/")+1:]
-							}
-							return strings.Trim(s, "/")
-						}(),
-						Description: v,
-					})
+					isExit, name := false, func() string {
+						if strings.Contains(s, "/") {
+							return s[strings.LastIndex(s, "/")+1:]
+						}
+						return strings.Trim(s, "/")
+					}()
+					for _, v := range rootapi.Tags { //tags不存在时再添加
+						if v.Name == name {
+							isExit = true
+						}
+					}
+					if !isExit {
+						rootapi.Tags = append(rootapi.Tags, swagger.Tag{
+							Name:        name,
+							Description: v,
+						})
+					}
 				}
 
 			}
