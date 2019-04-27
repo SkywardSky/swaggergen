@@ -1097,7 +1097,14 @@ func parserComments(f *ast.FuncDecl, controllerName, pkgpath string) error {
 
 	var item *swagger.Item
 	if itemList, ok := controllerList[pkgpath+controllerName]; ok {
-		if it, ok := itemList[routerPath]; !ok {
+		if len(routerPath) != 0 {
+			if it, ok := itemList[routerPath]; !ok {
+				item = &swagger.Item{}
+			} else {
+				item = it
+			}
+		}
+		if it, ok := itemList[funcName]; !ok {
 			item = &swagger.Item{}
 		} else {
 			item = it
@@ -1132,9 +1139,11 @@ func parserComments(f *ast.FuncDecl, controllerName, pkgpath string) error {
 			item.Options = &opts
 		}
 	}
+	if len(routerPath) != 0 {
+		controllerList[pkgpath+controllerName][routerPath] = item
+	}
 	//增加通过Method名找到item
 	controllerList[pkgpath+controllerName][funcName] = item
-	controllerList[pkgpath+controllerName][routerPath] = item
 	//}
 	return nil
 }
