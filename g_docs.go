@@ -605,119 +605,34 @@ func analyseNSRouter(baseurl string, ce *ast.CallExpr) string {
 							return tag
 						}()
 
-						if item.Get != nil {
-							item.Post = item.Get
-							item.Put = item.Get
-							item.Patch = item.Get
-							item.Head = item.Get
-							item.Delete = item.Get
-							item.Options = item.Get
-						} else if item.Post != nil {
-							item.Get = item.Post
-							item.Put = item.Post
-							item.Patch = item.Post
-							item.Head = item.Post
-							item.Delete = item.Post
-							item.Options = item.Post
-						} else if item.Put != nil {
-							item.Get = item.Put
-							item.Post = item.Put
-							item.Patch = item.Put
-							item.Head = item.Put
-							item.Delete = item.Put
-							item.Options = item.Put
-						} else if item.Patch != nil {
-							item.Get = item.Patch
-							item.Post = item.Patch
-							item.Put = item.Patch
-							item.Head = item.Patch
-							item.Delete = item.Patch
-							item.Options = item.Patch
-						} else if item.Head != nil {
-							item.Get = item.Head
-							item.Post = item.Head
-							item.Put = item.Head
-							item.Patch = item.Head
-							item.Delete = item.Head
-							item.Options = item.Head
-						} else if item.Delete != nil {
-							item.Get = item.Delete
-							item.Post = item.Delete
-							item.Put = item.Delete
-							item.Patch = item.Delete
-							item.Head = item.Delete
-							item.Options = item.Delete
-						} else if item.Options != nil {
-							item.Get = item.Options
-							item.Post = item.Options
-							item.Put = item.Options
-							item.Patch = item.Options
-							item.Head = item.Options
-							item.Delete = item.Options
-						}
-
+						tempItem := new(swagger.Item)
 						if strings.ToLower(mappingMethods[0]) == "get" {
-							item.Get.Tags = []string{tag}
-							item.Post = nil
-							item.Put = nil
-							item.Patch = nil
-							item.Head = nil
-							item.Delete = nil
-							item.Options = nil
+							tempItem.Get, tempItem.Ref = copyOperation(item)
+							tempItem.Get.Tags = []string{tag}
 						}
 						if strings.ToLower(mappingMethods[0]) == "post" {
-							item.Post.Tags = []string{tag}
-							item.Get = nil
-							item.Put = nil
-							item.Patch = nil
-							item.Head = nil
-							item.Delete = nil
-							item.Options = nil
+							tempItem.Post, tempItem.Ref = copyOperation(item)
+							tempItem.Post.Tags = []string{tag}
 						}
 						if strings.ToLower(mappingMethods[0]) == "put" {
-							item.Put.Tags = []string{tag}
-							item.Get = nil
-							item.Post = nil
-							item.Patch = nil
-							item.Head = nil
-							item.Delete = nil
-							item.Options = nil
+							tempItem.Put, tempItem.Ref = copyOperation(item)
+							tempItem.Put.Tags = []string{tag}
 						}
 						if strings.ToLower(mappingMethods[0]) == "patch" {
-							item.Patch.Tags = []string{tag}
-							item.Get = nil
-							item.Post = nil
-							item.Put = nil
-							item.Head = nil
-							item.Delete = nil
-							item.Options = nil
+							tempItem.Patch, tempItem.Ref = copyOperation(item)
+							tempItem.Patch.Tags = []string{tag}
 						}
 						if strings.ToLower(mappingMethods[0]) == "head" {
-							item.Head.Tags = []string{tag}
-							item.Get = nil
-							item.Post = nil
-							item.Put = nil
-							item.Patch = nil
-							item.Delete = nil
-							item.Options = nil
+							tempItem.Head, tempItem.Ref = copyOperation(item)
+							tempItem.Head.Tags = []string{tag}
 						}
 						if strings.ToLower(mappingMethods[0]) == "delete" {
-							item.Delete.Tags = []string{tag}
-							item.Get = nil
-							item.Post = nil
-							item.Put = nil
-							item.Patch = nil
-							item.Head = nil
-							item.Options = nil
+							tempItem.Delete, tempItem.Ref = copyOperation(item)
+							tempItem.Delete.Tags = []string{tag}
 						}
 						if strings.ToLower(mappingMethods[0]) == "options" {
-							item.Options.Tags = []string{tag}
-							item.Get = nil
-							item.Post = nil
-							item.Put = nil
-							item.Patch = nil
-							item.Head = nil
-							item.Delete = nil
+							tempItem.Options, tempItem.Ref = copyOperation(item)
+							tempItem.Options.Tags = []string{tag}
 						}
 
 						if len(rootapi.Paths) == 0 {
@@ -732,6 +647,96 @@ func analyseNSRouter(baseurl string, ce *ast.CallExpr) string {
 		}
 	}
 	return cname
+}
+
+func copyOperation(item *swagger.Item) (*swagger.Operation, string) {
+	operation := new(swagger.Operation)
+	if item.Get != nil {
+		operation.Tags = item.Get.Tags
+		operation.Summary = item.Get.Summary
+		operation.Description = item.Get.Summary
+		operation.OperationID = item.Get.Summary
+		operation.Consumes = item.Get.Consumes
+		operation.Produces = item.Get.Produces
+		operation.Schemes = item.Get.Schemes
+		operation.Parameters = item.Get.Parameters
+		operation.Responses = item.Get.Responses
+		operation.Security = item.Get.Security
+		operation.Deprecated = item.Get.Deprecated
+	} else if item.Post != nil {
+		operation.Tags = item.Post.Tags
+		operation.Summary = item.Post.Summary
+		operation.Description = item.Post.Summary
+		operation.OperationID = item.Post.Summary
+		operation.Consumes = item.Post.Consumes
+		operation.Produces = item.Post.Produces
+		operation.Schemes = item.Post.Schemes
+		operation.Parameters = item.Post.Parameters
+		operation.Responses = item.Post.Responses
+		operation.Security = item.Post.Security
+		operation.Deprecated = item.Post.Deprecated
+	} else if item.Put != nil {
+		operation.Tags = item.Put.Tags
+		operation.Summary = item.Put.Summary
+		operation.Description = item.Put.Summary
+		operation.OperationID = item.Put.Summary
+		operation.Consumes = item.Put.Consumes
+		operation.Produces = item.Put.Produces
+		operation.Schemes = item.Put.Schemes
+		operation.Parameters = item.Put.Parameters
+		operation.Responses = item.Put.Responses
+		operation.Security = item.Put.Security
+		operation.Deprecated = item.Put.Deprecated
+	} else if item.Delete != nil {
+		operation.Tags = item.Delete.Tags
+		operation.Summary = item.Delete.Summary
+		operation.Description = item.Delete.Summary
+		operation.OperationID = item.Delete.Summary
+		operation.Consumes = item.Delete.Consumes
+		operation.Produces = item.Delete.Produces
+		operation.Schemes = item.Delete.Schemes
+		operation.Parameters = item.Delete.Parameters
+		operation.Responses = item.Delete.Responses
+		operation.Security = item.Delete.Security
+		operation.Deprecated = item.Delete.Deprecated
+	} else if item.Head != nil {
+		operation.Tags = item.Head.Tags
+		operation.Summary = item.Head.Summary
+		operation.Description = item.Head.Summary
+		operation.OperationID = item.Head.Summary
+		operation.Consumes = item.Head.Consumes
+		operation.Produces = item.Head.Produces
+		operation.Schemes = item.Head.Schemes
+		operation.Parameters = item.Head.Parameters
+		operation.Responses = item.Head.Responses
+		operation.Security = item.Head.Security
+		operation.Deprecated = item.Head.Deprecated
+	} else if item.Options != nil {
+		operation.Tags = item.Options.Tags
+		operation.Summary = item.Options.Summary
+		operation.Description = item.Options.Summary
+		operation.OperationID = item.Options.Summary
+		operation.Consumes = item.Options.Consumes
+		operation.Produces = item.Options.Produces
+		operation.Schemes = item.Options.Schemes
+		operation.Parameters = item.Options.Parameters
+		operation.Responses = item.Options.Responses
+		operation.Security = item.Options.Security
+		operation.Deprecated = item.Options.Deprecated
+	} else if item.Patch != nil {
+		operation.Tags = item.Patch.Tags
+		operation.Summary = item.Patch.Summary
+		operation.Description = item.Patch.Summary
+		operation.OperationID = item.Patch.Summary
+		operation.Consumes = item.Patch.Consumes
+		operation.Produces = item.Patch.Produces
+		operation.Schemes = item.Patch.Schemes
+		operation.Parameters = item.Patch.Parameters
+		operation.Responses = item.Patch.Responses
+		operation.Security = item.Patch.Security
+		operation.Deprecated = item.Patch.Deprecated
+	}
+	return operation, item.Ref
 }
 
 func analyseControllerPkg(vendorPath, localName, pkgpath string) {
