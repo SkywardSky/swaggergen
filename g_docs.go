@@ -683,8 +683,8 @@ func copyOperation(item *swagger.Item) (*swagger.Operation, string) {
 	if item.Get != nil {
 		operation.Tags = item.Get.Tags
 		operation.Summary = item.Get.Summary
-		operation.Description = item.Get.Summary
-		operation.OperationID = item.Get.Summary
+		operation.Description = item.Get.Description
+		operation.OperationID = item.Get.OperationID
 		operation.Consumes = item.Get.Consumes
 		operation.Produces = item.Get.Produces
 		operation.Schemes = item.Get.Schemes
@@ -695,8 +695,8 @@ func copyOperation(item *swagger.Item) (*swagger.Operation, string) {
 	} else if item.Post != nil {
 		operation.Tags = item.Post.Tags
 		operation.Summary = item.Post.Summary
-		operation.Description = item.Post.Summary
-		operation.OperationID = item.Post.Summary
+		operation.Description = item.Post.Description
+		operation.OperationID = item.Post.OperationID
 		operation.Consumes = item.Post.Consumes
 		operation.Produces = item.Post.Produces
 		operation.Schemes = item.Post.Schemes
@@ -707,8 +707,8 @@ func copyOperation(item *swagger.Item) (*swagger.Operation, string) {
 	} else if item.Put != nil {
 		operation.Tags = item.Put.Tags
 		operation.Summary = item.Put.Summary
-		operation.Description = item.Put.Summary
-		operation.OperationID = item.Put.Summary
+		operation.Description = item.Put.Description
+		operation.OperationID = item.Put.OperationID
 		operation.Consumes = item.Put.Consumes
 		operation.Produces = item.Put.Produces
 		operation.Schemes = item.Put.Schemes
@@ -719,8 +719,8 @@ func copyOperation(item *swagger.Item) (*swagger.Operation, string) {
 	} else if item.Delete != nil {
 		operation.Tags = item.Delete.Tags
 		operation.Summary = item.Delete.Summary
-		operation.Description = item.Delete.Summary
-		operation.OperationID = item.Delete.Summary
+		operation.Description = item.Delete.Description
+		operation.OperationID = item.Delete.OperationID
 		operation.Consumes = item.Delete.Consumes
 		operation.Produces = item.Delete.Produces
 		operation.Schemes = item.Delete.Schemes
@@ -731,8 +731,8 @@ func copyOperation(item *swagger.Item) (*swagger.Operation, string) {
 	} else if item.Head != nil {
 		operation.Tags = item.Head.Tags
 		operation.Summary = item.Head.Summary
-		operation.Description = item.Head.Summary
-		operation.OperationID = item.Head.Summary
+		operation.Description = item.Head.Description
+		operation.OperationID = item.Head.OperationID
 		operation.Consumes = item.Head.Consumes
 		operation.Produces = item.Head.Produces
 		operation.Schemes = item.Head.Schemes
@@ -743,8 +743,8 @@ func copyOperation(item *swagger.Item) (*swagger.Operation, string) {
 	} else if item.Options != nil {
 		operation.Tags = item.Options.Tags
 		operation.Summary = item.Options.Summary
-		operation.Description = item.Options.Summary
-		operation.OperationID = item.Options.Summary
+		operation.Description = item.Options.Description
+		operation.OperationID = item.Options.OperationID
 		operation.Consumes = item.Options.Consumes
 		operation.Produces = item.Options.Produces
 		operation.Schemes = item.Options.Schemes
@@ -755,8 +755,8 @@ func copyOperation(item *swagger.Item) (*swagger.Operation, string) {
 	} else if item.Patch != nil {
 		operation.Tags = item.Patch.Tags
 		operation.Summary = item.Patch.Summary
-		operation.Description = item.Patch.Summary
-		operation.OperationID = item.Patch.Summary
+		operation.Description = item.Patch.Description
+		operation.OperationID = item.Patch.OperationID
 		operation.Consumes = item.Patch.Consumes
 		operation.Produces = item.Patch.Produces
 		operation.Schemes = item.Patch.Schemes
