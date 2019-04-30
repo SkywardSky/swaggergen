@@ -1,4 +1,4 @@
-module swaggergen
+module github.com/bufio/swaggergen
 
 require (
 	github.com/astaxie/beego v1.11.1
