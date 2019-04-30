@@ -8,7 +8,7 @@ https://beego.me/docs/advantage/docs.md
 使用NewNamespace+NSNamespace...+NSInclude得方式时，需要用beego得bee工具run一下项目，以生成beego得注解路由文件
 
 #下载包
-go get github.com/bufio/swaggergen
+go get -u github.com/bufio/swaggergen
 
 #使用方式
 ~~~
