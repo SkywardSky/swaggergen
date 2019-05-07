@@ -17,6 +17,10 @@ go get -u github.com/bufio/swaggergen
     
 2.使用
 func main(){
+    //获取相对于执行文件的工作目录的绝对路径，并且把路径设置为工作目录
+    if err := os.Chdir(filepath.Dir(os.Args[0])); err != nil {
+        log.Fatal("设置工作目录失败：", err)
+    }
     if beego.BConfig.RunMode == "dev" {
         //安装swagger得文件，原理是通过将swagger得文件从base64字符串中生成swagger.zip，最后解压出来
         //根据swagger中得index.html是否存在，判断是否需要安装
