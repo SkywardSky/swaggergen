@@ -221,7 +221,7 @@ func GenerateDocs(curpath string) {
 	rootapi.SwaggerVersion = "2.0"
 	parsePackagesFromDir(curpath)
 	filepath.Walk(filepath.Join(curpath, "routers"), func(path string, info os.FileInfo, err error) error {
-		if !info.IsDir() {
+		if info != nil && !info.IsDir() {
 			generateDocs(curpath, info.Name())
 		}
 		return nil
