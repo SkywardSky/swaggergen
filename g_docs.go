@@ -221,10 +221,10 @@ func GenerateDocs(curpath string) {
 	rootapi.SwaggerVersion = "2.0"
 	parsePackagesFromDir(curpath)
 	filepath.Walk(filepath.Join(curpath, "routers"), func(path string, info os.FileInfo, err error) error {
-		if err == nil && !info.IsDir() {
+		if !info.IsDir() {
 			generateDocs(curpath, info.Name())
 		}
-		return err
+		return nil
 	})
 }
 
@@ -368,18 +368,10 @@ func generateDocs(curpath, name string) {
 									} else if selname == "NSInclude" {
 										controllerName = analyseNSInclude("", pp)
 										if v, ok := controllerComments[controllerName]; ok {
-											isExit := false
-											for _, v := range rootapi.Tags { //tags不存在时再添加
-												if v.Name == controllerName {
-													isExit = true
-												}
-											}
-											if !isExit {
-												rootapi.Tags = append(rootapi.Tags, swagger.Tag{
-													Name:        controllerName, // if the NSInclude has no prefix, we use the controllername as the tag
-													Description: v,
-												})
-											}
+											rootapi.Tags = append(rootapi.Tags, swagger.Tag{
+												Name:        controllerName, // if the NSInclude has no prefix, we use the controllername as the tag
+												Description: v,
+											})
 										}
 									}
 								}
@@ -465,6 +457,7 @@ func findNS(s string, params []ast.Expr) {
 							Description: v,
 						})
 					}
+
 				}
 
 			}
@@ -633,8 +626,8 @@ func analyseNSRouter(baseurl string, ce *ast.CallExpr) string {
 							}
 							return tag
 						}()
-
 						tempItem := new(swagger.Item)
+
 						if strings.ToLower(mappingMethods[0]) == "get" {
 							tempItem.Get, tempItem.Ref = copyOperation(item)
 							tempItem.Get.Tags = []string{tag}
@@ -663,12 +656,11 @@ func analyseNSRouter(baseurl string, ce *ast.CallExpr) string {
 							tempItem.Options, tempItem.Ref = copyOperation(item)
 							tempItem.Options.Tags = []string{tag}
 						}
-
 						if len(rootapi.Paths) == 0 {
 							rootapi.Paths = make(map[string]*swagger.Item)
 						}
 						rt = urlReplace(rt)
-						rootapi.Paths[rt] = item
+						rootapi.Paths[rt] = tempItem
 						break
 					}
 				}
@@ -862,7 +854,7 @@ func isSystemPackage(pkgpath string) bool {
 		return true
 	}
 
-	//TODO(zh):support go1.4
+	//support go1.4
 	wg, _ = filepath.EvalSymlinks(filepath.Join(goroot, "src", pkgpath))
 	return utils.FileExists(wg)
 }
@@ -888,7 +880,7 @@ func parserComments(f *ast.FuncDecl, controllerName, pkgpath string) error {
 	funcName := f.Name.String()
 	comments := f.Doc
 	funcParamMap := buildParamMap(f.Type.Params)
-	//TODO: resultMap := buildParamMap(f.Type.Results)
+	// resultMap := buildParamMap(f.Type.Results)
 	if comments != nil && comments.List != nil {
 		for _, c := range comments.List {
 			t := strings.TrimSpace(strings.TrimPrefix(c.Text, "//"))
@@ -1332,7 +1324,7 @@ L:
 			beeLogger.Log.Warnf("Cannot find the object: %s", str)
 		}
 		m.Title = objectname
-		// TODO remove when all type have been supported
+		// remove when all type have been supported
 	}
 	if len(rootapi.Definitions) == 0 {
 		rootapi.Definitions = make(map[string]swagger.Schema)
@@ -1346,7 +1338,7 @@ func parseObject(d *ast.Object, k string, m *swagger.Schema, realTypes *[]string
 	if !ok {
 		beeLogger.Log.Fatalf("Unknown type without TypeSec: %v", d)
 	}
-	// TODO support other types, such as `MapType`, `InterfaceType` etc...
+	// support other types, such as `MapType`, `InterfaceType` etc...
 	switch t := ts.Type.(type) {
 	case *ast.ArrayType:
 		m.Title = k
@@ -1395,7 +1387,7 @@ func parseIdent(st *ast.Ident, k string, m *swagger.Schema, astPkgs []*ast.Packa
 
 					ti, ok := vs.Type.(*ast.Ident)
 					if !ok {
-						// TODO type inference, iota not support yet
+						// type inference, iota not support yet
 						continue
 					}
 					// Only add the enums that are defined by the current identifier
