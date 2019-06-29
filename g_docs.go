@@ -1607,7 +1607,7 @@ func parseStruct(st *ast.StructType, k string, m *Schema, realTypes *[]string, a
 					for _, pkg := range astPkgs {
 						for _, fl := range pkg.Files {
 							for nameOfObj, obj := range fl.Scope.Objects {
-								if obj.Name == fmt.Sprint(field.Type) {
+								if fmt.Sprintf("%s.%s",pkg.Name,obj.Name) == realType {
 									parseObject(obj, nameOfObj, nm, realTypes, astPkgs, pkg.Name)
 								}
 							}
