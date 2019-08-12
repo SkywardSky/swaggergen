@@ -597,7 +597,9 @@ func analyseNSRouter(baseurl string, ce *ast.CallExpr) string {
 						item.Head.Tags = []string{tag}
 						item.Delete.Tags = []string{tag}
 						item.Options.Tags = []string{tag}
-						rootapi.Paths = make(map[string]*Item)
+						if len(rootapi.Paths) == 0 {
+							rootapi.Paths = make(map[string]*Item)
+						}
 						rt = urlReplace(rt)
 						rootapi.Paths[rt] = item
 						break
@@ -1607,7 +1609,7 @@ func parseStruct(st *ast.StructType, k string, m *Schema, realTypes *[]string, a
 					for _, pkg := range astPkgs {
 						for _, fl := range pkg.Files {
 							for nameOfObj, obj := range fl.Scope.Objects {
-								if fmt.Sprintf("%s.%s",pkg.Name,obj.Name) == realType {
+								if fmt.Sprintf("%s.%s", pkg.Name, obj.Name) == realType {
 									parseObject(obj, nameOfObj, nm, realTypes, astPkgs, pkg.Name)
 								}
 							}
